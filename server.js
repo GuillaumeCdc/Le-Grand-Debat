@@ -9,7 +9,10 @@ const { WebSocketServer } = require("ws");
 const PORT = process.env.PORT || 3000;
 const MIN = parseInt(process.env.MIN_PLAYERS || "4", 10);
 const MAX = 8;
-const INDEX = fs.readFileSync(path.join(__dirname, "public", "index.html"));
+// Cherche la page du jeu dans public/index.html, ou à défaut à côté de server.js
+const PAGE = [path.join(__dirname, "public", "index.html"), path.join(__dirname, "index.html")].find(f => fs.existsSync(f));
+if (!PAGE) { console.error("index.html est introuvable : ajoute-le à côté de server.js."); process.exit(1); }
+const INDEX = fs.readFileSync(PAGE);
 
 const server = http.createServer((req, res) => {
   const u = (req.url || "/").split("?")[0];
